@@ -14,7 +14,12 @@ class CharactersController < ApplicationController
   end
 
   def character_found?
-    render json: { name: "Dylan", found: true }
+    x = params[:x].to_i
+    y = params[:y].to_i
+
+    found = x >= 0 && x <= 100 && y >= 0 && y <= 200
+
+    render json: { name: "Dylan", found: found }
   end
 
   # POST /characters
