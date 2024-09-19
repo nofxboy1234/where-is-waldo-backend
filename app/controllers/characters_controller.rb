@@ -16,8 +16,14 @@ class CharactersController < ApplicationController
   def character_found?
     x = params[:x].to_i
     y = params[:y].to_i
+    id = params[:id]
 
-    found = x >= 0 && x <= 100 && y >= 0 && y <= 200
+    character = Character.find(id)
+
+    found = x >= character.position["x"] &&
+      x <= character.position["x"] + character.position["width"] &&
+      y >= character.position["y"] &&
+      y <= character.position["y"] + character.position["height"]
 
     render json: { name: "Dylan", found: found }
   end
