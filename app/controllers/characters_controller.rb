@@ -25,6 +25,9 @@ class CharactersController < ApplicationController
       y >= character.position["y"] &&
       y <= character.position["y"] + character.position["height"]
 
+    session[:start_time] = DateTime.now
+    puts session[:start_time]
+
     render json: { name: "Dylan", found: found }
   end
 
