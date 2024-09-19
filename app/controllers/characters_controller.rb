@@ -13,6 +13,10 @@ class CharactersController < ApplicationController
     render json: @character
   end
 
+  def character_found?
+    render json: { name: "Dylan", found: true }
+  end
+
   # POST /characters
   def create
     @character = Character.new(character_params)
