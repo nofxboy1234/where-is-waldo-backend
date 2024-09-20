@@ -32,12 +32,18 @@ class CharactersController < ApplicationController
     decoded = jwt_decode(header)
 
     if found
+      user_id = decoded[:user_id]
+      puts "user_id: #{user_id}"
       found_characters = decoded[:found_characters]
+      puts "found_characters: #{found_characters}"
       found_characters.push(character.name)
-      token = jwt_encode(user_id: "user1", found_characters: found_characters)
-      render json: { token: token, found: found, name: character.name }, status: :ok
+
+      all_found = found_characters.size == 3
+
+      token = jwt_encode(user_id: user_id, found_characters: found_characters)
+      render json: { token: token, found: true, name: character.name, all_found: all_found }, status: :ok
     else
-      render json: { found: found, name: character.name }, status: :ok
+      render json: { found: false, name: character.name, all_found: false }, status: :ok
     end
   end
 
