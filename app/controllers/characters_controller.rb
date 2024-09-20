@@ -35,9 +35,9 @@ class CharactersController < ApplicationController
       found_characters = decoded[:found_characters]
       found_characters.push(character.name)
       token = jwt_encode(user_id: "user1", found_characters: found_characters)
-      render json: { token: token, found: found }, status: :ok
+      render json: { token: token, found: found, name: character.name }, status: :ok
     else
-      render json: { found: found }, status: :ok
+      render json: { found: found, name: character.name }, status: :ok
     end
   end
 
