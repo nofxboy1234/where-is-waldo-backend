@@ -38,7 +38,7 @@ class CharactersController < ApplicationController
       puts "found_characters: #{found_characters}"
       found_characters.push(character.name)
 
-      all_found = found_characters.size == 3
+      all_found = found_characters.size == Character.count
 
       token = jwt_encode(user_id: user_id, found_characters: found_characters)
       render json: { token: token, found: true, name: character.name, all_found: all_found }, status: :ok
