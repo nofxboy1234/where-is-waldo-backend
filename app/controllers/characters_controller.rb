@@ -1,4 +1,6 @@
 class CharactersController < ApplicationController
+  include JsonWebToken
+
   before_action :set_character, only: %i[ show update destroy ]
 
   # GET /characters
@@ -25,10 +27,18 @@ class CharactersController < ApplicationController
       y >= character.position["y"] &&
       y <= character.position["y"] + character.position["height"]
 
-    session[:start_time] = DateTime.now
-    puts session[:start_time]
+    header = request.headers["Authorization"]
+    header = header.split(" ").last if header
+    decoded = jwt_decode(header)
 
-    render json: { name: "Dylan", found: found }
+    if found
+      found_characters = decoded[:found_characters]
+      found_characters.push(character.name)
+      token = jwt_encode(user_id: "user1", found_characters: found_characters)
+      render json: { token: token, found: found }, status: :ok
+    else
+      render json: { found: found }, status: :ok
+    end
   end
 
   # POST /characters
