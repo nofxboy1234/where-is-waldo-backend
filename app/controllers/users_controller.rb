@@ -9,9 +9,4 @@ class UsersController < ApplicationController
     )
     render json: { token: token }, status: :ok
   end
-
-  def set_score
-    puts "set_score"
-    render json: params, status: :ok
-  end
 end

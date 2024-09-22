@@ -12,7 +12,7 @@ class CharactersController < ApplicationController
 
   # GET /characters/1
   def show
-    render json: @character
+    render json: @score
   end
 
   def character_found?
@@ -33,9 +33,7 @@ class CharactersController < ApplicationController
 
     if found
       user_id = decoded[:user_id]
-      puts "user_id: #{user_id}"
       found_characters = decoded[:found_characters]
-      puts "found_characters: #{found_characters}"
       found_characters.push(character.name)
       start_time = decoded[:start_time].to_datetime
 
@@ -46,21 +44,22 @@ class CharactersController < ApplicationController
         start_time: start_time,
       )
 
+      score = nil
+      score_id = nil
+
       if all_found
         end_time = DateTime.now
-        puts "start_time: #{start_time}"
-        puts "end_time: #{end_time}"
         score = end_time.to_i - start_time.to_i
-        puts "score: #{score}"
 
-        redirect_to controller: "users", action: "set_score",
-          token: token, found: true, name: character.name,
-          all_found: all_found, score: score
-        # redirect_to users_set_score_path, { token: token, found: true, name: character.name, all_found: all_found, score: score }
-      else
-        render json: { token: token, found: true, name: character.name, all_found: all_found }, status: :ok
+        @score = Score.new(time: score, user_id: user_id)
+        @score.save
+        score_id = @score.id
       end
 
+      render json: {
+        token: token, found: true, name: character.name,
+        all_found: all_found, score: score, score_id: score_id
+      }, status: :ok
     else
       render json: { found: false, name: character.name, all_found: false }, status: :ok
     end
@@ -68,33 +67,33 @@ class CharactersController < ApplicationController
 
   # POST /characters
   def create
-    @character = Character.new(character_params)
+    @score = Character.new(character_params)
 
-    if @character.save
-      render json: @character, status: :created, location: @character
+    if @score.save
+      render json: @score, status: :created, location: @score
     else
-      render json: @character.errors, status: :unprocessable_entity
+      render json: @score.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /characters/1
   def update
-    if @character.update(character_params)
-      render json: @character
+    if @score.update(character_params)
+      render json: @score
     else
-      render json: @character.errors, status: :unprocessable_entity
+      render json: @score.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /characters/1
   def destroy
-    @character.destroy!
+    @score.destroy!
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_character
-      @character = Character.find(params[:id])
+      @score = Character.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
