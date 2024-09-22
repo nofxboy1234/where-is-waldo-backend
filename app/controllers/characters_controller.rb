@@ -37,11 +37,23 @@ class CharactersController < ApplicationController
       found_characters = decoded[:found_characters]
       puts "found_characters: #{found_characters}"
       found_characters.push(character.name)
+      start_time = decoded[:start_time].to_datetime
 
       all_found = found_characters.size == Character.count
+      if all_found
+        end_time = DateTime.now
+        puts "start_time: #{start_time}"
+        puts "end_time: #{end_time}"
+        score = end_time.to_i - start_time.to_i
+        puts "score: #{score}"
+      end
 
-      token = jwt_encode(user_id: user_id, found_characters: found_characters)
-      render json: { token: token, found: true, name: character.name, all_found: all_found }, status: :ok
+      token = jwt_encode(
+        user_id: user_id,
+        found_characters: found_characters,
+        start_time: start_time,
+      )
+      render json: { token: token, found: true, name: character.name, all_found: all_found, score: score }, status: :ok
     else
       render json: { found: false, name: character.name, all_found: false }, status: :ok
     end
