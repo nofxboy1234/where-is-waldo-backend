@@ -10,11 +10,6 @@ class CharactersController < ApplicationController
     render json: @characters
   end
 
-  # GET /characters/1
-  def show
-    render json: @score
-  end
-
   def character_found?
     x = params[:x].to_i
     y = params[:y].to_i
@@ -67,33 +62,33 @@ class CharactersController < ApplicationController
 
   # POST /characters
   def create
-    @score = Character.new(character_params)
+    @character = Character.new(character_params)
 
-    if @score.save
-      render json: @score, status: :created, location: @score
+    if @character.save
+      render json: @character, status: :created, location: @character
     else
-      render json: @score.errors, status: :unprocessable_entity
+      render json: @character.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /characters/1
   def update
-    if @score.update(character_params)
-      render json: @score
+    if @character.update(character_params)
+      render json: @character
     else
-      render json: @score.errors, status: :unprocessable_entity
+      render json: @character.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /characters/1
   def destroy
-    @score.destroy!
+    @character.destroy!
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_character
-      @score = Character.find(params[:id])
+      @character = Character.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
