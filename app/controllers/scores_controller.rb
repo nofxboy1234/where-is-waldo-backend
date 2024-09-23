@@ -5,10 +5,6 @@ class ScoresController < ApplicationController
 
   # PATCH/PUT /scores/1
   def update
-    header = request.headers["Authorization"]
-    header = header.split(" ").last if header
-    decoded = jwt_decode(header)
-
     name = params[:name]
 
     # puts params
