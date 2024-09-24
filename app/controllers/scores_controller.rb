@@ -3,6 +3,13 @@ class ScoresController < ApplicationController
 
   before_action :set_score, only: %i[ update ]
 
+  # GET /characters
+  def index
+    @scores = Score.limit(3).order(time: :asc)
+
+    render json: @scores
+  end
+
   # PATCH/PUT /scores/1
   def update
     name = params[:name]
